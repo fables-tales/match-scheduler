@@ -20,6 +20,7 @@ def getRandomCoprime(a):
 if __name__ == "__main__":
 
 	teams = int(sys.argv[1])
+	teamsmatches = []
 	desiredMatches = int(sys.argv[2])
 	teamsPerMatch = int(sys.argv[3])
 	slots = desiredMatches*teamsPerMatch
@@ -35,8 +36,9 @@ if __name__ == "__main__":
 		print (slots/baseMatches+1)*baseMatches/teamsPerMatch, "matches"
 		print "continuing with unfair number of matches"
 
-	matchcounts = [desiredMatches]*teams
 	matches = [None]*desiredMatches
+	for i in range(0,teams):
+		teamsmatches.append([])
 
 	teamindex = random.randint(0, teams -1)
 
@@ -48,16 +50,16 @@ if __name__ == "__main__":
 		while len(match) < teamsPerMatch:
 			choice = random.choice(tlist)
 			tlist.remove(choice)
-			matchcounts[choice-1] -= 1
 			match.append(choice)
+			teamsmatches[choice-1].append(i+1)
 
 			if tlist == []:
 				tlist = range(1,teams+1)
 
 		matches[i] = match
 
-	for i in range(0, len(matchcounts)):
-		print "Team %d is in %d matches" % (i+1, desiredMatches-matchcounts[i])
+	for i in range(0, teams):
+		print "Team %d is in %d matches: %s" % (i+1, len(teamsmatches[i]), teamsmatches[i])
 
 	for i in range(0, desiredMatches):
 		print "Match number: %d" % (i + 1)
