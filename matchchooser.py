@@ -42,15 +42,17 @@ if __name__ == "__main__":
 
 	stride = getRandomCoprime(teams)
 
+	tlist = range(1, teams+1)
 	for i in range(0, desiredMatches):
 		match = []
-
 		while len(match) < teamsPerMatch:
-			teamindex = (teamindex + stride) % teams
+			choice = random.choice(tlist)
+			tlist.remove(choice)
+			matchcounts[choice-1] -= 1
+			match.append(choice)
 
-			if teamindex+1 not in match:
-				matchcounts[teamindex] -= 1
-				match.append(teamindex+1)
+			if tlist == []:
+				tlist = range(1,teams+1)
 
 		matches[i] = match
 
