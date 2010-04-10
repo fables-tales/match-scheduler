@@ -74,4 +74,4 @@ if __name__ == "__main__":
 				csv.write(",")
 			else:
 				csv.write("\n")
-			
+
