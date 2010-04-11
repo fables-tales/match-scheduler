@@ -19,6 +19,13 @@ def getRandomCoprime(a):
 
 if __name__ == "__main__":
 
+	if len(sys.argv) < 4:
+		print 'Usage: matchchooser TEAMS MATCHES TPM'
+		print '\tTEAMS\t- The total number of teams competing'
+		print '\tMATCHES\t- the total number of matches desired'
+		print '\tTPM\t- The number of teams per match'
+		sys.exit(1)
+
 	teams = int(sys.argv[1])
 	teamsmatches = []
 	desiredMatches = int(sys.argv[2])
