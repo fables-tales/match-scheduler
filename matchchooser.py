@@ -25,7 +25,7 @@ if __name__ == "__main__":
 	slots = desiredMatches*teamsPerMatch
 	baseMatches = teams*teamsPerMatch/gcd(teams,teamsPerMatch)
 
-	if (desiredMatches % baseMatches != 0):
+	if (slots % baseMatches != 0):
 		print "warning, inexact number of team slots for desired number of matches"
 		print "closest number of matches for exact number of slots are"
 
