@@ -9,14 +9,6 @@ def gcd(a, b):
 		return gcd(b, a%b)
 
 
-def getRandomCoprime(a):
-	r = random.randint(2, a-1)
-
-	while (gcd(a, r) != 1):
-		r = random.randint(2, a-1)
-
-	return r
-
 if __name__ == "__main__":
 
 	if len(sys.argv) < 3:
@@ -48,8 +40,6 @@ if __name__ == "__main__":
 		teamsmatches.append([])
 
 	teamindex = random.randint(0, teams -1)
-
-	stride = getRandomCoprime(teams)
 
 	tlist = range(1, teams+1)
 	for i in range(0, desiredMatches):
