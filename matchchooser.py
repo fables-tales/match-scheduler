@@ -102,10 +102,11 @@ def setup_matches(desired_matches, number_of_teams, slots_per_match, byematches 
 if __name__ == "__main__":
 
 	if len(sys.argv) < 3:
-		print 'Usage: matchchooser TEAMS MATCHES [--tpm=num]'
+		print 'Usage: matchchooser TEAMS MATCHES [--tpm=num] [--allow-byes]'
 		print '\tTEAMS\t- The total number of teams competing'
 		print '\tMATCHES\t- the total number of matches desired'
 		print '\t--tpm\t- The number of teams per match, defaults to 4'
+		print '\t--allow-byes\t- If present allow bye matches'
 		sys.exit(1)
 
 	teams = int(sys.argv[1])
@@ -113,10 +114,13 @@ if __name__ == "__main__":
 	desiredMatches = int(sys.argv[2])
 
 	#Optional command line args
+	allowByes = False
 	teamsPerMatch = 4
 	if len(sys.argv) > 3:
 		if sys.argv[3][:6] == '--tpm=':
 			teamsPerMatch = int(sys.argv[3][6:])
+		elif sys.argv[3] == '--allow-byes':
+			allowByes = True
 
 	slots = desiredMatches*teamsPerMatch
 	baseMatches = teams*teamsPerMatch/gcd(teams,teamsPerMatch)
@@ -131,7 +135,7 @@ if __name__ == "__main__":
 		print (slots/baseMatches+1)*baseMatches/teamsPerMatch, "matches"
 		print "continuing with unfair number of matches"
 
-	matches, team_o = setup_matches(desiredMatches, teams, teamsPerMatch)
+	matches, team_o = setup_matches(desiredMatches, teams, teamsPerMatch, allowByes)
 
 	for i in team_o:
 		print "Team %d in %d matches:" % (i.number, i.get_number_of_matches()), i.get_matches()
