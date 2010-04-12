@@ -53,7 +53,7 @@ def gcd(a, b):
 def max_matches_per_team(desired_matches, teams, slots_per_match):
 	return (desired_matches*slots_per_match) / teams
 
-def setup_matches(desired_matches, number_of_teams, slots_per_match):
+def setup_matches(desired_matches, number_of_teams, slots_per_match, byematches = False):
 	teams = []
 
 	for i in range(1, number_of_teams+1):
@@ -78,11 +78,22 @@ def setup_matches(desired_matches, number_of_teams, slots_per_match):
 
 			tlist.remove(choice)
 
-			match.add_team(choice)
+			#check the team can actually go into the match
+			if byematches == False or choice.get_number_of_matches() < max_matches:
+				match.add_team(choice)
 
 			#reinitialise teams if we've used them all
 			if len(tlist) == 0:
 				tlist = teams[0:]
+
+			if byematches == True:
+				broken = 0
+				for i in teams:
+					if i.get_number_of_matches() != max_matches:
+						broken = 1
+				if not broken:
+					matches.append(match)
+					return matches,teams
 
 		matches.append(match)
 
