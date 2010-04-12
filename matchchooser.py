@@ -116,10 +116,10 @@ if __name__ == "__main__":
 	#Optional command line args
 	allowByes = False
 	teamsPerMatch = 4
-	if len(sys.argv) > 3:
-		if sys.argv[3][:6] == '--tpm=':
-			teamsPerMatch = int(sys.argv[3][6:])
-		elif sys.argv[3] == '--allow-byes':
+	for arg in sys.argv[3:]:
+		if arg[:6] == '--tpm=':
+			teamsPerMatch = int(arg[6:])
+		elif arg == '--allow-byes':
 			allowByes = True
 
 	slots = desiredMatches*teamsPerMatch
