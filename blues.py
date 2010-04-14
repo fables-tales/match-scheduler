@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import random
 
 def not_in_rectangle(left, top, width, height, i, j):
