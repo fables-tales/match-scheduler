@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 import sys
 import random
+import datetime, time
+
+MATCH_INTERVAL = datetime.timedelta( minutes = 8 )
 
 class Team:
 	def __init__(self, number):
@@ -107,11 +110,13 @@ if __name__ == "__main__":
 		print '\tMATCHES\t- the total number of matches desired'
 		print '\t--tpm\t- The number of teams per match, defaults to 4'
 		print '\t--allow-byes\t- If present allow bye matches'
+		print '\t--start-time=HH:MM\t - The time the first match should start.'
 		sys.exit(1)
 
 	teams = int(sys.argv[1])
 	teamsmatches = []
 	desiredMatches = int(sys.argv[2])
+	start_time = datetime.datetime.fromtimestamp(0)
 
 	#Optional command line args
 	allowByes = False
@@ -121,6 +126,16 @@ if __name__ == "__main__":
 			teamsPerMatch = int(arg[6:])
 		elif arg == '--allow-byes':
 			allowByes = True
+		elif arg[0:13] == "--start-time=":
+			s = arg[-5:].split( ":" )
+			h = int(s[0])
+			m = int(s[1])
+			s = datetime.datetime.now()
+			start_time = datetime.datetime( year = s.year,
+							month = s.month,
+							day = s.day,
+							hour = h,
+							minute = m )
 
 	slots = desiredMatches*teamsPerMatch
 	baseMatches = teams*teamsPerMatch/gcd(teams,teamsPerMatch)
@@ -148,6 +163,7 @@ if __name__ == "__main__":
 	sql = open("matches.sql", "w")
 
 	n = 0
+	match_time = start_time
 	for match in matches:
 		n = n + 1
 		for i in range(0, len(match._teams)):
@@ -160,7 +176,8 @@ if __name__ == "__main__":
 
 		# Generate sql
 		colours = [ "red", "green", "blue", "yellow" ]
-		s = "insert into matches set number = %i, time = 0" % n
+		s = "insert into matches set number = %i, time = %i" % (n, time.mktime(match_time.timetuple()))
+		match_time += MATCH_INTERVAL
 		cnum = 0
 
 		for team in [x.number for x in match._teams]:
