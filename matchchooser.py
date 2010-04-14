@@ -143,10 +143,13 @@ if __name__ == "__main__":
 	for m in matches:
 		print "Match %d:" % m._number, m.teams()
 
-	print "writing matches to matches.csv"
+	print "writing matches to matches.csv and matches.sql"
 	csv = open("matches.csv", "w")
+	sql = open("matches.sql", "w")
 
+	n = 0
 	for match in matches:
+		n = n + 1
 		for i in range(0, len(match._teams)):
 			csv.write(str(match._teams[i].number))
 
@@ -155,3 +158,14 @@ if __name__ == "__main__":
 			else:
 				csv.write("\n")
 
+		# Generate sql
+		colours = [ "red", "green", "blue", "yellow" ]
+		s = "insert into matches set number = %i, time = 0" % n
+		cnum = 0
+
+		for team in [x.number for x in match._teams]:
+			s += ", %s = %i" % (colours[cnum], team)
+			cnum += 1
+		s += ";\n"
+
+		sql.write( s )
