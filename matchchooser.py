@@ -3,7 +3,19 @@ import sys
 import random
 import datetime, time
 
+def tup_to_dt(t):
+	s = datetime.datetime.now()
+	h, m = t
+	x = datetime.datetime( year = s.year,
+			       month = s.month,
+			       day = s.day,
+			       hour = h,
+			       minute = m )
+	return x
+
 MATCH_INTERVAL = datetime.timedelta( minutes = 8 )
+LUNCH = tup_to_dt((12,30))
+LUNCH_END = tup_to_dt((13,15))
 
 class Team:
 	def __init__(self, number):
@@ -111,6 +123,7 @@ if __name__ == "__main__":
 		print '\t--tpm\t- The number of teams per match, defaults to 4'
 		print '\t--allow-byes\t- If present allow bye matches'
 		print '\t--start-time=HH:MM\t - The time the first match should start.'
+		print "\t--skip-lunch\t - Don't schedule matches between 12:30 and 13:15"
 		sys.exit(1)
 
 	teams = int(sys.argv[1])
@@ -121,6 +134,7 @@ if __name__ == "__main__":
 	#Optional command line args
 	allowByes = False
 	teamsPerMatch = 4
+	skip_lunch = False
 	for arg in sys.argv[3:]:
 		if arg[:6] == '--tpm=':
 			teamsPerMatch = int(arg[6:])
@@ -130,12 +144,9 @@ if __name__ == "__main__":
 			s = arg[-5:].split( ":" )
 			h = int(s[0])
 			m = int(s[1])
-			s = datetime.datetime.now()
-			start_time = datetime.datetime( year = s.year,
-							month = s.month,
-							day = s.day,
-							hour = h,
-							minute = m )
+			start_time = tup_to_dt( (h,m) )
+		elif arg == "--skip-lunch":
+			skip_lunch = True
 
 	slots = desiredMatches*teamsPerMatch
 	baseMatches = teams*teamsPerMatch/gcd(teams,teamsPerMatch)
@@ -176,8 +187,13 @@ if __name__ == "__main__":
 
 		# Generate sql
 		colours = [ "red", "green", "blue", "yellow" ]
+
 		s = "insert into matches set number = %i, time = %i" % (n, time.mktime(match_time.timetuple()))
 		match_time += MATCH_INTERVAL
+
+		if skip_lunch and match_time >= LUNCH and match_time < LUNCH_END:
+			match_time = LUNCH_END
+
 		cnum = 0
 
 		for team in [x.number for x in match._teams]:
