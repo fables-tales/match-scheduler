@@ -17,7 +17,9 @@ def generateblocks(width, height, rampleft, ramptop, rampwidth, rampheight, blue
                 
     blue_blocks = []
     for i in range(0, blues):
-        blue_blocks.append(random.choice(positions))
+        b = random.choice(positions)
+        positions.remove(b)
+        blue_blocks.append(b)
     return blue_blocks
 
 
