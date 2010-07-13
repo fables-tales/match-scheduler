@@ -1,0 +1,36 @@
+<project>
+    <property name="src" location="src"/>
+    <property name="bin" location="bin"/>
+    <property name="deps" location="depends"/>
+
+
+    <path id="classpath">
+        <fileset dir="depends">
+            <include name="*.jar" />
+        </fileset>
+        <pathelement path="${bin}"/>
+    </path>
+
+    <target name="clean">
+        <delete dir="${bin}"/>
+    </target>
+
+    <target name="build">
+        <mkdir dir="${bin}"/>
+        <javac srcdir="${src}" destdir="${bin}" includeantruntime="false"/>
+    </target>
+
+    <target name="jar" depends="build">
+        <delete file="MANIFEST.MF"/>
+        <manifest file="MANIFEST.MF">
+           <attribute name="Main-Class" value="org.studentrobotics.matchscheduler.main.Main"/>
+        </manifest>
+        <jar destfile="scheduler.jar"
+             basedir="${bin}"
+             includes="**/*.class"
+             manifest="MANIFEST.MF"
+        />
+        <delete file="MANIFEST.MF"/>
+    </target>
+
+</project>
